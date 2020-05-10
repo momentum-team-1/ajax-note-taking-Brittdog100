@@ -9,16 +9,24 @@ let bodyField = document.createElement("input");
 bodyField.classList.add("note_body");
 let postbutt = document.createElement("button");
 postbutt.textContent = "post";
-postbutt.addEventListener("click", postNote);
+postbutt.addEventListener("click", PostBehavior);
 newNoteDiv.appendChild(titleField);
 newNoteDiv.appendChild(bodyField);
 newNoteDiv.appendChild(postbutt);
 document.querySelector(".content").appendChild(newNoteDiv);
 
+function PostBehavior(event) {
+    event.preventDefault();
+    let title = titleField.value;
+    let body = bodyField.value;
+    if(title == "" || body == "")
+        return;
+    postNote({ "title": title, "body": body });
+}
+
 function assembleList(notes) {
     for(n of notes)
         generateElement(n);
-    //make code to add the new note field~
 }
 
 function generateElement(note) {
@@ -41,7 +49,7 @@ function generateElement(note) {
     delbutt.addEventListener("click", function() { delNote(note); });
     let editbutt = document.createElement("button");
     editbutt.textContent = "edit";
-    //editbutt.addEventListener("click", editMode(note));
+    editbutt.addEventListener("click", function() { editMode(note); });
     footer.appendChild(delbutt);
     footer.appendChild(editbutt);
     e.appendChild(footer);
@@ -75,16 +83,22 @@ function editMode(note) {
         div.removeChild(child);
 
     let titleField = document.createElement("input");
+    titleField.value = note.title;
     let bodyField = document.createElement("input");
+    bodyField.value = note.body;
     let postbutt = document.createElement("button");
     postbutt.textContent = "update";
+    postbutt.addEventListener("click", function() { patchNote({ "id": note.id, "title": titleField.value, "body": bodyField.value }); });
     let exitbutt = document.createElement("button");
     exitbutt.textContent = "cancel";
+    exitbutt.addEventListener("click", function() { exitEditMode(note); });
     div.appendChild(titleField);
     div.appendChild(bodyField);
     div.appendChild(postbutt);
-    div.appendCihld(exitbutt);
+    div.appendChild(exitbutt);
+
 }
 
 function exitEditMode(note) {
+    window.location.reload();
 }
